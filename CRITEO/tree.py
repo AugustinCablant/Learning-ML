@@ -240,3 +240,33 @@ class Tree:
         path = np.array(path[1:])
         path = list(path - 1)[::-1]
         return max_mean, path
+    
+    def assign_indices(self):
+        """
+        Assigne un indice unique à chaque nœud de l'arbre en utilisant un parcours BFS.
+        Les indices sont attribués séquentiellement en commençant par la racine (indice 0).
+
+        Returns
+        -------
+        dict
+            Un dictionnaire où les clés sont les noms des nœuds et les valeurs sont leurs indices respectifs.
+        """
+        if not hasattr(self, "root") or self.root is None:
+            raise ValueError("The tree has no root node defined.")
+
+        queue = deque([self.root])  # File pour BFS
+        index = 0  # Indice initial
+        indices = {}  # Dictionnaire pour stocker les indices
+
+        while queue:
+            node = queue.popleft()
+            indices[node.name] = index
+            index += 1
+
+            # Ajouter les enfants dans la file d'attente
+            for child in node.children:
+                queue.append(child)
+
+        # Sauvegarde des indices comme attribut
+        self.indices = indices
+        return indices
